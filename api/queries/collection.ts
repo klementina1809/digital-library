@@ -4,6 +4,7 @@ import { api } from "@/api/api";
 import type {
   AddCollectionBookPayload,
   CollectionBook,
+  UpdateCollectionBookPayload,
 } from "@/types/collection";
 
 export const useGetCollectionBooks = () => {
@@ -46,6 +47,18 @@ export const useDeleteBookFromCollection = () => {
     onError: (_error, _bookId, context) => {
       queryClient.setQueryData(["collection-books"], context?.previousBooks);
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["collection-books"] });
+    },
+  });
+};
+
+export const useUpdateCollectionBook = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: UpdateCollectionBookPayload) =>
+      api.updateCollectionBook(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["collection-books"] });
     },

@@ -1,5 +1,8 @@
 import { createSupabaseServerClient, getCurrentUser } from "@/lib/supabase/server";
-import type { AddCollectionBookPayload } from "@/types/collection";
+import type {
+  AddCollectionBookPayload,
+  UpdateCollectionBookPayload,
+} from "@/types/collection";
 
 export const dynamic = "force-dynamic";
 
@@ -71,6 +74,60 @@ export async function POST(request: Request) {
       },
       { onConflict: "collection_id,gutenberg_book_id" }
     )
+    .select()
+    .single();
+
+  if (bookError) {
+    return Response.json({ message: bookError.message }, { status: 500 });
+  }
+
+  return Response.json(collectionBook);
+}
+
+export async function PATCH(request: Request) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return Response.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  const { bookId, rating, note } =
+    (await request.json()) as UpdateCollectionBookPayload;
+
+  if (!bookId) {
+    return Response.json({ message: "Book id is required" }, { status: 400 });
+  }
+
+  const updates: { rating?: number | null; note?: string | null } = {};
+
+  if (rating !== undefined) {
+    updates.rating = rating;
+  }
+
+  if (note !== undefined) {
+    updates.note = note;
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data: collection, error: collectionError } = await supabase
+    .from("collections")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (collectionError) {
+    return Response.json({ message: collectionError.message }, { status: 500 });
+  }
+
+  if (!collection) {
+    return Response.json({ message: "Collection not found" }, { status: 404 });
+  }
+
+  const { data: collectionBook, error: bookError } = await supabase
+    .from("collection_books")
+    .update(updates)
+    .eq("collection_id", collection.id)
+    .eq("gutenberg_book_id", bookId)
     .select()
     .single();
 

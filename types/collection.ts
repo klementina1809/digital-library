@@ -4,6 +4,12 @@ export type AddCollectionBookPayload = {
   book: Book;
 };
 
+export type UpdateCollectionBookPayload = {
+  bookId: number;
+  rating?: number | null;
+  note?: string | null;
+};
+
 export type CollectionBook = {
   id: string;
   collection_id: string;

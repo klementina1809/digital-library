@@ -16,12 +16,16 @@ type BookCardProps = {
   book: Book;
   variant?: "search" | "collection";
   isSavedInCollection?: boolean;
+  collectionRating?: number | null;
+  collectionNote?: string | null;
 };
 
 export function BookCard({
   book,
   variant = "search",
   isSavedInCollection = false,
+  collectionRating,
+  collectionNote,
 }: BookCardProps) {
   const author = book.authors[0]?.name ?? "Unknown author";
   const isCollectionCard = variant === "collection";
@@ -118,7 +122,13 @@ export function BookCard({
       <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
         {author}
       </p>
-      {isCollectionCard && <CollectionBookFields bookTitle={book.title} />}
+      {isCollectionCard && (
+        <CollectionBookFields
+          bookId={book.id}
+          initialRating={collectionRating}
+          initialNote={collectionNote}
+        />
+      )}
     </div>
   );
 }

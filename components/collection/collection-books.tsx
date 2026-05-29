@@ -43,5 +43,5 @@ export function CollectionBooks() {
     );
   }
 
-  return <BookGrid books={books} variant="collection" />;
+  return <BookGrid books={books} variant="collection" collectionBooks={data} />;
 }

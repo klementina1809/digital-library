@@ -1,6 +1,7 @@
 import type {
   AddCollectionBookPayload,
   CollectionBook,
+  UpdateCollectionBookPayload,
 } from "@/types/collection";
 
 export const collectionEndpoints = {
@@ -40,5 +41,23 @@ export const collectionEndpoints = {
     if (!response.ok) {
       throw new Error("Failed to delete book from collection");
     }
+  },
+
+  updateCollectionBook: async (
+    payload: UpdateCollectionBookPayload
+  ): Promise<CollectionBook> => {
+    const response = await fetch("/api/collection/books", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update collection book");
+    }
+
+    return response.json();
   },
 };
