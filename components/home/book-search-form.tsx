@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { type SyntheticEvent, useState } from "react";
 
 import { useGetBooks } from "@/api/queries/books";
@@ -34,18 +35,34 @@ export function BookSearchForm() {
     fetchNextPage();
   }
 
+  function handleClearSearch() {
+    setSearch("");
+    setSubmittedSearch("");
+  }
+
   return (
     <div className="w-full">
       <form
         onSubmit={handleSubmit}
         className="mx-auto flex max-w-xl flex-col gap-3 sm:flex-row mb-8"
       >
-        <Input
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          placeholder="Search books"
-          className="h-11 bg-white"
-        />
+        <div className="relative w-full">
+          <Input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search books"
+            className="h-11 bg-white pr-10"
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={handleClearSearch}
+              className="absolute right-3 top-1/2 flex -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <X className="size-4" />
+            </button>
+          )}
+        </div>
         <Button type="submit" disabled={isSearchDisabled} className="h-11 px-6">
           Search
         </Button>
