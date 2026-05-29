@@ -14,12 +14,18 @@ import type { Book } from "@/types/books";
 type BookCardProps = {
   book: Book;
   variant?: "search" | "collection";
+  isSavedInCollection?: boolean;
 };
 
-export function BookCard({ book, variant = "search" }: BookCardProps) {
+export function BookCard({
+  book,
+  variant = "search",
+  isSavedInCollection = false,
+}: BookCardProps) {
   const author = book.authors[0]?.name ?? "Unknown author";
   const isCollectionCard = variant === "collection";
   const [isSaved, setIsSaved] = useState(false);
+  const isBookmarkActive = isSaved || isSavedInCollection;
   const { mutate: addBook, isPending: isAdding } = useAddBookToCollection();
   const { mutate: deleteBook, isPending: isDeleting } =
     useDeleteBookFromCollection();
@@ -42,12 +48,12 @@ export function BookCard({ book, variant = "search" }: BookCardProps) {
         <button
           type="button"
           onClick={handleAddToCollection}
-          disabled={isAdding || isSaved}
+          disabled={isAdding || isBookmarkActive}
           className="absolute right-2 top-2 flex size-8 cursor-pointer items-center justify-center rounded-full bg-white text-secondary shadow-sm transition-colors hover:text-secondary-dark disabled:cursor-default"
         >
           <Bookmark
             className="size-4"
-            fill={isSaved ? "currentColor" : "none"}
+            fill={isBookmarkActive ? "currentColor" : "none"}
           />
         </button>
       )}

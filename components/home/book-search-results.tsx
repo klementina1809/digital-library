@@ -1,4 +1,6 @@
+import { useGetCollectionBooks } from "@/api/queries/collection";
 import { BookGrid } from "@/components/books/book-grid";
+import { BookGridSkeleton } from "@/components/books/book-grid-skeleton";
 import { Button } from "@/components/ui/button";
 import type { Book } from "@/types/books";
 
@@ -17,8 +19,16 @@ export function BookSearchResults({
   isLoading,
   onLoadMore,
 }: BookSearchResultsProps) {
+  const { data: collectionBooks } = useGetCollectionBooks();
+  const savedBookIds =
+    collectionBooks?.map((book) => book.gutenberg_book_id) ?? [];
+
   if (isLoading && !books.length) {
-    return <p className="mt-4 text-left text-sm text-muted-foreground">Loading...</p>;
+    return (
+      <div className="mt-4 text-left">
+        <BookGridSkeleton />
+      </div>
+    );
   }
 
   if (isError) {
@@ -39,7 +49,12 @@ export function BookSearchResults({
 
   return (
     <div className="mt-4 text-left">
-      <BookGrid books={books} />
+      <BookGrid books={books} savedBookIds={savedBookIds} />
+      {isLoading && (
+        <div className="mt-5">
+          <BookGridSkeleton />
+        </div>
+      )}
       {hasMore && (
         <div className="mt-6 flex justify-center">
           <Button

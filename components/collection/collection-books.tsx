@@ -2,6 +2,7 @@
 
 import { useGetCollectionBooks } from "@/api/queries/collection";
 import { BookGrid } from "@/components/books/book-grid";
+import { BookGridSkeleton } from "@/components/books/book-grid-skeleton";
 
 export function CollectionBooks() {
   const { data, isError, isLoading } = useGetCollectionBooks();
@@ -23,7 +24,7 @@ export function CollectionBooks() {
     })) ?? [];
 
   if (isLoading) {
-    return <p className="text-sm text-muted-foreground">Loading...</p>;
+    return <BookGridSkeleton />;
   }
 
   if (isError) {
