@@ -16,11 +16,17 @@ export function BookSearchForm() {
     page_size: 10,
   };
 
-  const { data, isError, isFetching } = useGetBooks(bookSearchParams);
+  const { data, fetchNextPage, hasNextPage, isError, isFetching } =
+    useGetBooks(bookSearchParams);
+  const books = data?.pages.flatMap((page) => page.results) ?? [];
 
   function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmittedSearch(search.trim());
+  }
+
+  function handleLoadMore() {
+    fetchNextPage();
   }
 
   return (
@@ -38,9 +44,11 @@ export function BookSearchForm() {
         </Button>
       </form>
       <BookSearchResults
-        books={data?.results ?? []}
+        books={books}
+        hasMore={hasNextPage}
         isError={isError}
         isLoading={isFetching}
+        onLoadMore={handleLoadMore}
       />
     </div>
   );
