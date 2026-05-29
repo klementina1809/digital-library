@@ -1,4 +1,4 @@
-import { BookCard } from "@/components/home/book-card";
+import { BookGrid } from "@/components/books/book-grid";
 import { Button } from "@/components/ui/button";
 import type { Book } from "@/types/books";
 
@@ -39,11 +39,7 @@ export function BookSearchResults({
 
   return (
     <div className="mt-4 text-left">
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
-        {books.map((book) => (
-          <BookCard key={book.id} book={book} />
-        ))}
-      </div>
+      <BookGrid books={books} />
       {hasMore && (
         <div className="mt-6 flex justify-center">
           <Button
