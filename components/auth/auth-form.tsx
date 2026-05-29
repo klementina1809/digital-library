@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useActionState } from "react";
 
@@ -32,11 +33,16 @@ export function AuthForm({
   title,
 }: AuthFormProps) {
   const [state, formAction, isPending] = useActionState(action, initialState);
+  const queryClient = useQueryClient();
+
+  function handleSubmit() {
+    queryClient.clear();
+  }
 
   return (
     <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow-sm">
       <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
-      <form action={formAction} className="mt-6 space-y-4">
+      <form action={formAction} onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div className="space-y-2">
           <label htmlFor="email" className="text-sm font-medium">
             Email

@@ -6,7 +6,9 @@ import type {
 
 export const collectionEndpoints = {
   getCollectionBooks: async (): Promise<CollectionBook[]> => {
-    const response = await fetch("/api/collection/books");
+    const response = await fetch("/api/collection/books", {
+      cache: "no-store",
+    });
 
     if (!response.ok) {
       throw new Error("Failed to fetch collection books");
@@ -20,6 +22,7 @@ export const collectionEndpoints = {
   ): Promise<CollectionBook> => {
     const response = await fetch("/api/collection/books", {
       method: "POST",
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
       },
@@ -36,6 +39,7 @@ export const collectionEndpoints = {
   deleteBookFromCollection: async (bookId: number): Promise<void> => {
     const response = await fetch(`/api/collection/books?book_id=${bookId}`, {
       method: "DELETE",
+      cache: "no-store",
     });
 
     if (!response.ok) {
@@ -48,6 +52,7 @@ export const collectionEndpoints = {
   ): Promise<CollectionBook> => {
     const response = await fetch("/api/collection/books", {
       method: "PATCH",
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
       },
