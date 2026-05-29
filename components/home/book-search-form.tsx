@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 export function BookSearchForm() {
   const [search, setSearch] = useState("");
   const [submittedSearch, setSubmittedSearch] = useState("");
+  const isSearchDisabled = search.trim().length < 3;
   const bookSearchParams = {
     q: submittedSearch,
     page: 1,
@@ -22,6 +23,10 @@ export function BookSearchForm() {
 
   function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (isSearchDisabled) {
+      return;
+    }
+
     setSubmittedSearch(search.trim());
   }
 
@@ -41,7 +46,7 @@ export function BookSearchForm() {
           placeholder="Search books"
           className="h-11 bg-white"
         />
-        <Button type="submit" className="h-11 px-6">
+        <Button type="submit" disabled={isSearchDisabled} className="h-11 px-6">
           Search
         </Button>
       </form>
