@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { api } from "@/api/api";
 import type {
@@ -21,6 +22,7 @@ export const useAddBookToCollection = () => {
     mutationFn: (payload: AddCollectionBookPayload) =>
       api.addBookToCollection(payload),
     onSuccess: () => {
+      toast.success("Book added to collection");
       queryClient.invalidateQueries({ queryKey: ["collection-books"] });
     },
   });
@@ -48,6 +50,7 @@ export const useDeleteBookFromCollection = () => {
       queryClient.setQueryData(["collection-books"], context?.previousBooks);
     },
     onSuccess: () => {
+      toast.success("Book removed from collection");
       queryClient.invalidateQueries({ queryKey: ["collection-books"] });
     },
   });
@@ -59,7 +62,8 @@ export const useUpdateCollectionBook = () => {
   return useMutation({
     mutationFn: (payload: UpdateCollectionBookPayload) =>
       api.updateCollectionBook(payload),
-    onSuccess: () => {
+    onSuccess: (_book, payload) => {
+      toast.success(payload.rating !== undefined ? "Rating saved" : "Note saved");
       queryClient.invalidateQueries({ queryKey: ["collection-books"] });
     },
   });
