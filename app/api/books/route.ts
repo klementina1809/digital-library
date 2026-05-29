@@ -1,8 +1,15 @@
 import { searchGutenbergBooks } from "@/lib/gutenberg";
+import { getCurrentUser } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return Response.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
   const { searchParams } = new URL(request.url);
   const params = {
     q: searchParams.get("q")?.trim() ?? "",
