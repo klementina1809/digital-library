@@ -59,10 +59,9 @@ export function BookSearchResults({
         <div className="mt-6 flex justify-center">
           <Button
             type="button"
-            variant="secondary"
             onClick={onLoadMore}
             disabled={isLoading}
-            className="h-9"
+            className="h-11 px-6"
           >
             {isLoading ? "Loading..." : "Load more"}
           </Button>

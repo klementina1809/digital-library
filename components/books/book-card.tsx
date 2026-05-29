@@ -9,6 +9,7 @@ import {
   useDeleteBookFromCollection,
 } from "@/api/queries/collection";
 import { CollectionBookFields } from "@/components/books/collection-book-fields";
+import { RemoveBookDialog } from "@/components/books/remove-book-dialog";
 import type { Book } from "@/types/books";
 
 type BookCardProps = {
@@ -42,13 +43,22 @@ export function BookCard({
     );
   }
 
+  function handleDeleteFromCollection() {
+    setIsSaved(false);
+    deleteBook(book.id);
+  }
+
+  function handleBookmarkClick() {
+    handleAddToCollection();
+  }
+
   return (
     <div className="relative">
-      {!isCollectionCard && (
+      {!isCollectionCard && !isBookmarkActive && (
         <button
           type="button"
-          onClick={handleAddToCollection}
-          disabled={isAdding || isBookmarkActive}
+          onClick={handleBookmarkClick}
+          disabled={isAdding || isDeleting}
           className="absolute right-2 top-2 flex size-8 cursor-pointer items-center justify-center rounded-full bg-white text-secondary shadow-sm transition-colors hover:text-secondary-dark disabled:cursor-default"
         >
           <Bookmark
@@ -57,15 +67,35 @@ export function BookCard({
           />
         </button>
       )}
-      {isCollectionCard && (
-        <button
-          type="button"
-          onClick={() => deleteBook(book.id)}
-          disabled={isDeleting}
-          className="absolute right-2 top-2 flex size-8 cursor-pointer items-center justify-center rounded-full bg-white text-primary shadow-sm transition-colors hover:text-primary-dark disabled:cursor-default"
+      {!isCollectionCard && isBookmarkActive && (
+        <RemoveBookDialog
+          bookTitle={book.title}
+          isPending={isDeleting}
+          onConfirm={handleDeleteFromCollection}
         >
-          <X className="size-4" />
-        </button>
+          <button
+            type="button"
+            disabled={isDeleting}
+            className="absolute right-2 top-2 flex size-8 cursor-pointer items-center justify-center rounded-full bg-white text-secondary shadow-sm transition-colors hover:text-secondary-dark disabled:cursor-default"
+          >
+            <Bookmark className="size-4" fill="currentColor" />
+          </button>
+        </RemoveBookDialog>
+      )}
+      {isCollectionCard && (
+        <RemoveBookDialog
+          bookTitle={book.title}
+          isPending={isDeleting}
+          onConfirm={handleDeleteFromCollection}
+        >
+          <button
+            type="button"
+            disabled={isDeleting}
+            className="absolute right-2 top-2 flex size-8 cursor-pointer items-center justify-center rounded-full bg-white text-primary shadow-sm transition-colors hover:text-primary-dark disabled:cursor-default"
+          >
+            <X className="size-4" />
+          </button>
+        </RemoveBookDialog>
       )}
       <div className="aspect-[2/3] overflow-hidden rounded-lg bg-primary-light">
         {book.cover_image ? (
