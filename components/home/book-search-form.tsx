@@ -30,13 +30,15 @@ export function BookSearchForm() {
   }
 
   return (
-    <div className="w-full max-w-xl">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row">
+    <div className="w-full">
+      <form
+        onSubmit={handleSubmit}
+        className="mx-auto flex max-w-xl flex-col gap-3 sm:flex-row"
+      >
         <Input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           placeholder="Search books"
-          aria-label="Search books"
           className="h-11 bg-white"
         />
         <Button type="submit" className="h-11 px-6">

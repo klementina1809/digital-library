@@ -1,3 +1,4 @@
+import { BookCard } from "@/components/home/book-card";
 import type { Book } from "@/types/books";
 
 type BookSearchResultsProps = {
@@ -37,14 +38,11 @@ export function BookSearchResults({
 
   return (
     <div className="mt-4 text-left">
-      <ul className="space-y-2">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
         {books.map((book) => (
-          <li key={book.id}>
-            {book.title}
-            {book.authors.length > 0 && ` - ${book.authors[0].name}`}
-          </li>
+          <BookCard key={book.id} book={book} />
         ))}
-      </ul>
+      </div>
       {hasMore && (
         <button
           type="button"
