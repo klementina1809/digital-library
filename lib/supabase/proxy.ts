@@ -1,36 +1,32 @@
-import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+
+import { createSupabaseClient, hasSupabaseConfig } from "@/lib/supabase/client";
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({
     request,
   });
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-
-  if (!supabaseUrl || !supabaseKey) {
+  if (!hasSupabaseConfig()) {
     return response;
   }
 
-  const supabase = createServerClient(supabaseUrl, supabaseKey, {
-    cookies: {
-      getAll() {
-        return request.cookies.getAll();
-      },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) => {
-          request.cookies.set(name, value);
-        });
+  const supabase = createSupabaseClient({
+    getAll() {
+      return request.cookies.getAll();
+    },
+    setAll(cookiesToSet) {
+      cookiesToSet.forEach(({ name, value }) => {
+        request.cookies.set(name, value);
+      });
 
-        response = NextResponse.next({
-          request,
-        });
+      response = NextResponse.next({
+        request,
+      });
 
-        cookiesToSet.forEach(({ name, value, options }) => {
-          response.cookies.set(name, value, options);
-        });
-      },
+      cookiesToSet.forEach(({ name, value, options }) => {
+        response.cookies.set(name, value, options);
+      });
     },
   });
 
@@ -39,9 +35,13 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
   const isAuthPage =
     request.nextUrl.pathname === "/login" ||
-    request.nextUrl.pathname === "/register";
+    request.nextUrl.pathname === "/register" ||
+    request.nextUrl.pathname === "/confirm-email";
+  const isProtectedPage =
+    request.nextUrl.pathname === "/" ||
+    request.nextUrl.pathname.startsWith("/collection");
 
-  if (!user && request.nextUrl.pathname === "/") {
+  if (!user && isProtectedPage) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 

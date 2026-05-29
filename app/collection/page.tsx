@@ -1,18 +1,14 @@
-import { HomeHero } from "@/components/home/home-hero";
 import { AppNavbar } from "@/components/layout/app-navbar";
 import { requireUser } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
+export default async function CollectionPage() {
   await requireUser();
 
   return (
     <main className="min-h-screen bg-background">
       <AppNavbar />
-      <div className="px-4 py-16">
-        <HomeHero />
-      </div>
     </main>
   );
 }

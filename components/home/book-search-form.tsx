@@ -33,7 +33,7 @@ export function BookSearchForm() {
     <div className="w-full">
       <form
         onSubmit={handleSubmit}
-        className="mx-auto flex max-w-xl flex-col gap-3 sm:flex-row"
+        className="mx-auto flex max-w-xl flex-col gap-3 sm:flex-row mb-8"
       >
         <Input
           value={search}

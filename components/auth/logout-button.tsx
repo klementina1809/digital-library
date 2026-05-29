@@ -6,7 +6,11 @@ import { Button } from "@/components/ui/button";
 export function LogoutButton() {
   return (
     <form action={logout}>
-      <Button type="submit" variant="outline" className="gap-2">
+      <Button
+        type="submit"
+        variant="ghost"
+        className="gap-2"
+      >
         <LogOut className="size-4" />
         Logout
       </Button>

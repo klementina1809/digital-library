@@ -1,4 +1,5 @@
 import { BookCard } from "@/components/home/book-card";
+import { Button } from "@/components/ui/button";
 import type { Book } from "@/types/books";
 
 type BookSearchResultsProps = {
@@ -44,14 +45,17 @@ export function BookSearchResults({
         ))}
       </div>
       {hasMore && (
-        <button
-          type="button"
-          onClick={onLoadMore}
-          disabled={isLoading}
-          className="mt-4 text-sm font-medium text-primary disabled:opacity-50"
-        >
-          {isLoading ? "Loading..." : "Load more"}
-        </button>
+        <div className="mt-6 flex justify-center">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={onLoadMore}
+            disabled={isLoading}
+            className="h-9"
+          >
+            {isLoading ? "Loading..." : "Load more"}
+          </Button>
+        </div>
       )}
     </div>
   );
